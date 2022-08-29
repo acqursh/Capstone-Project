@@ -6,7 +6,6 @@ import webbrowser
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 import keyboard
-import pkce
 import requests
 
 client_id = "238R4F"
@@ -14,9 +13,6 @@ client_secret = "3a556b63e50ee80ad4469a1615e7b623"
 
 
 def make_request():
-    code_verifier = pkce.generate_code_verifier(length=128)
-    code_challenge = pkce.get_code_challenge(code_verifier)
-
     url = f"https://www.fitbit.com/oauth2/authorize?response_type=code&client_id={client_id}&" \
           "redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Flogin&scope=activity%20heartrate" \
           "%20location%20nutrition%20profile%20settings%20sleep%20social%20weight%20" \
@@ -25,22 +21,21 @@ def make_request():
     webbrowser.open(url, new=1, autoraise=True)
 
 
-def wait_for_response(server_class=HTTPServer,
-                      handler_class=BaseHTTPRequestHandler):
+def wait_for_response(server_class=HTTPServer, handler_class=BaseHTTPRequestHandler):
     server_address = ('', 8080)
     httpd = server_class(server_address, handler_class)
     buffer = 1
-    sys.stderr = open(r'C:\Users\arkop\OneDrive\Desktop\College Stuff\Capstone\CapstoneProject\logfile.txt', 'w',
+    sys.stderr = open(r'.\logfile.txt', 'w',
                       buffer)
     return httpd.handle_request()
 
 
 def read_log():
-    with open("logfile.txt", "r") as f:
-        for line in f:
+    with open("logfile.txt", "r") as file:
+        for line in file:
             pass
         last_line = line
-        return last_line[54:-16]
+    return last_line[54:-16]
 
 
 def close_tab():
@@ -65,16 +60,58 @@ def get_token():
     }
 
     response = requests.post('https://api.fitbit.com/oauth2/token', headers=headers, data=data)
-    # print(response.text)
-    token = json.loads(response.text)
-    for i in token:
-        print(i, ":", token[i])
+    token = json.dumps(response.json(), indent=4)
+
+    with open("token.json", "w") as file:
+        file.write(token)
+
+
+def restore_token(refresh_token):
+    token = f"{client_id}:{client_secret}"
+    auth_token = str(base64.b64encode(token.encode("ascii")))
+    headers = {
+        'accept': 'application/json',
+        'authorization': f'Basic {auth_token[2:-1]}',
+        'content-type': 'application/x-www-form-urlencoded',
+    }
+
+    data = f'grant_type=refresh_token&refresh_token={refresh_token}'
+
+    response = requests.post('https://api.fitbit.com/oauth2/token', headers=headers, data=data)
+
+    token = json.dumps(response.json(), indent=4)
+
+    with open("token.json", "w") as file:
+        file.write(token)
+
+
+def get_user(access_token):
+    headers = {
+        'accept': 'application/json',
+        'authorization': f'Bearer {access_token}',
+    }
+
+    response = requests.get('https://api.fitbit.com/1/user/-/profile.json', headers=headers)
+    user_info = response.json()
+    d = {}
+    lst = ["age", "firstName", "lastName", "gender", "weight"]
+    for i in user_info['user']:
+        if i in lst:
+            d[i] = user_info['user'][i]
+
+    print(d)
 
 
 if __name__ == '__main__':
-    make_request()
-    wait_for_response()
-    close_tab()
-    time.sleep(2)
-    get_token()
-    # read_log()
+    try:
+        with open("token.json", "r") as f:
+            json_obj = json.load(f)
+        get_user(json_obj['access_token'])
+        # restore_token(json_obj['refresh_token'])
+    except:
+        make_request()
+        wait_for_response()
+        close_tab()
+        time.sleep(2)
+        get_token()
+# read_log()
