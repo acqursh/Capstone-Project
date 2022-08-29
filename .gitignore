@@ -2,4 +2,4 @@ venv
 logfile.txt
 .idea
 test.py
-token.json
+token.txt
