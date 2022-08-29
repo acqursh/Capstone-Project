@@ -1,4 +1,5 @@
 import base64
+import json
 import sys
 import time
 import webbrowser
@@ -16,10 +17,10 @@ def make_request():
     code_verifier = pkce.generate_code_verifier(length=128)
     code_challenge = pkce.get_code_challenge(code_verifier)
 
-    url = f"https://www.fitbit.com/oauth2/authorize?client_id={client_id}&response_type=code" \
-          f"&code_challenge={code_challenge}&code_challenge_method=S256" \
-          f"&scope=activity%20heartrate%20location%20nutrition%20oxygen_saturation%20profile" \
-          f"%20respiratory_rate%20settings%20sleep%20social%20temperature%20weight"
+    url = f"https://www.fitbit.com/oauth2/authorize?response_type=code&client_id={client_id}&" \
+          "redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Flogin&scope=activity%20heartrate" \
+          "%20location%20nutrition%20profile%20settings%20sleep%20social%20weight%20" \
+          "oxygen_saturation%20respiratory_rate%20temperature&expires_in=604800"
 
     webbrowser.open(url, new=1, autoraise=True)
 
@@ -29,7 +30,8 @@ def wait_for_response(server_class=HTTPServer,
     server_address = ('', 8080)
     httpd = server_class(server_address, handler_class)
     buffer = 1
-    sys.stderr = open(r'C:\Users\arkop\OneDrive\Desktop\College Stuff\Capstone\logfile.txt', 'w', buffer)
+    sys.stderr = open(r'C:\Users\arkop\OneDrive\Desktop\College Stuff\Capstone\CapstoneProject\logfile.txt', 'w',
+                      buffer)
     return httpd.handle_request()
 
 
@@ -50,7 +52,6 @@ def close_tab():
 def get_token():
     token = f"{client_id}:{client_secret}"
     auth_token = str(base64.b64encode(token.encode("ascii")))
-    print(auth_token[2:-1])
     headers = {
         'Authorization': f'Basic {auth_token[2:-1]}',
     }
@@ -64,7 +65,10 @@ def get_token():
     }
 
     response = requests.post('https://api.fitbit.com/oauth2/token', headers=headers, data=data)
-    print(response.text)
+    # print(response.text)
+    token = json.loads(response.text)
+    for i in token:
+        print(i, ":", token[i])
 
 
 if __name__ == '__main__':
