@@ -5,6 +5,7 @@ import time
 import webbrowser
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
+import jwt
 import keyboard
 import requests
 
@@ -60,10 +61,18 @@ def get_token():
     }
 
     response = requests.post('https://api.fitbit.com/oauth2/token', headers=headers, data=data)
-    token = json.dumps(response.json(), indent=4)
+    token = json.loads(response.text)
+    encrypted_token = {}
+    for i in token:
+        try:
+            encrypted_token[i] = token[i]
+        except Exception as e:
+            print(e)
+    # print(encrypted_token)
+    encoded = jwt.encode(encrypted_token, 'secret', algorithm='HS256')
 
-    with open("token.json", "w") as file:
-        file.write(token)
+    with open("token.txt", "w") as file:
+        file.write(encoded)
 
 
 def restore_token(refresh_token):
@@ -104,9 +113,10 @@ def get_user(access_token):
 
 if __name__ == '__main__':
     try:
-        with open("token.json", "r") as f:
-            json_obj = json.load(f)
-        get_user(json_obj['access_token'])
+        with open("token.txt", "r") as f:
+            encoded = f.read()
+        decoded = jwt.decode(encoded, 'secret', algorithms=['HS256'])
+        get_user(decoded['access_token'])
         # restore_token(json_obj['refresh_token'])
     except:
         make_request()
