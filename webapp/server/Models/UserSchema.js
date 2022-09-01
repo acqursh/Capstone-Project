@@ -2,16 +2,36 @@
 
 module.exports = (sequelize, DataTypes) => {
     const Users = sequelize.define("users_test", {
-      username: {
+      user_id:{
         type: DataTypes.STRING,
         allowNull: false,
       },
-      password: {
+      first_name: {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      last_name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+
+      access_token : {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      gender: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      weight:{
+        type: DataTypes.FLOAT,
+        allowNull: false,
+      },
       
-      
+      age: {
+        type: DataTypes.INT,
+        allowNull: false,
+      },
     });
   
     // Users.associate = (models) => {
