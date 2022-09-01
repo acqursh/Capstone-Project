@@ -1,7 +1,7 @@
 //name of table is users in the database
 
 module.exports = (sequelize, DataTypes) => {
-    const Users = sequelize.define("users_test", {
+    const UserSchema = sequelize.define("users_test", {
       user_id:{
         type: DataTypes.STRING,
         allowNull: false,
@@ -39,5 +39,5 @@ module.exports = (sequelize, DataTypes) => {
     //     onDelete: "cascade",
     //   });
     // };
-    return Users;
+    return UserSchema;
   };
