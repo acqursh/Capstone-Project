@@ -1,24 +1,24 @@
-import logo from './logo.svg';
+import Loginform from './loginform';
+import RegisterForm from './RegisterForm';
 import './App.css';
+import { createContext, useReducer, useState } from 'react';
+import PageRoutes from './Routes';
+import {BrowserRouter as Router} from "react-router-dom";
+
+export const UserContext = createContext();
 
 function App() {
+
+  const [user,setUser] = useState({
+    first_name: "",
+    last_name: "",
+    email: "",
+  });
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <PageRoutes/>
+    </Router>
   );
 }
 
