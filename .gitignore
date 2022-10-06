@@ -1,0 +1,5 @@
+venv
+logfile.txt
+.idea
+test.py
+token.txt
