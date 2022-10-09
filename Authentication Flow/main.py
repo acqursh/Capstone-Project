@@ -8,7 +8,8 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 
 from sqlalchemy.orm import sessionmaker
 
-from model import User
+from Models.users import User
+from Models.user_attr import User_attr
 
 from dotenv import load_dotenv
 
