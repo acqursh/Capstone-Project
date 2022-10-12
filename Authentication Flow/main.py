@@ -1,16 +1,27 @@
 import base64
 import json
+import os
 import sys
 import time
 import webbrowser
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
+from sqlalchemy.orm import sessionmaker
+
+from Models.users import User
+from Models.user_attr import User_attr
+
+from dotenv import load_dotenv
+
 import jwt
 import keyboard
 import requests
+import sqlalchemy as db
 
-client_id = "238R4F"
-client_secret = "3a556b63e50ee80ad4469a1615e7b623"
+load_dotenv()
+
+client_id = os.environ.get('CLIENT_ID')
+client_secret = os.environ.get('CLIENT_SECRET')
 
 
 def make_request():
@@ -102,26 +113,47 @@ def get_user(access_token):
 
     response = requests.get('https://api.fitbit.com/1/user/-/profile.json', headers=headers)
     user_info = response.json()
-    d = {}
-    lst = ["age", "firstName", "lastName", "gender", "weight"]
+    details = {}
+    lst = ["age", "firstName", "lastName", "gender", "weight", "encodedId"]
     for i in user_info['user']:
         if i in lst:
-            d[i] = user_info['user'][i]
+            details[i] = user_info['user'][i]
 
-    print(d)
+    return details
+
+
+def add_user(Details, Access_token):
+    try:
+        user = User(access_token=Access_token, age=Details['age'], first_name=Details['firstName'],
+                    last_name=Details['lastName'], user_id=Details['encodedId'], gender=Details['gender'],
+                    weight=Details['weight'])
+        session.add(user)
+        session.commit()
+        print("User Added")
+
+    except Exception as e:
+        print("user already exists")
 
 
 if __name__ == '__main__':
-    try:
-        with open("token.txt", "r") as f:
-            encoded = f.read()
-        decoded = jwt.decode(encoded, 'secret', algorithms=['HS256'])
-        get_user(decoded['access_token'])
-        # restore_token(json_obj['refresh_token'])
-    except:
-        make_request()
-        wait_for_response()
-        close_tab()
-        time.sleep(2)
-        get_token()
-# read_log()
+    database_uri = os.environ.get('SQL_DATABASE_URI')
+    engine = db.create_engine(database_uri)
+    connection = engine.connect()
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    while True:
+        try:
+            with open("token.txt", "r") as f:
+                encoded = f.read()
+            decoded = jwt.decode(encoded, 'secret', algorithms=['HS256'])
+            user_details = get_user(decoded['access_token'])
+            add_user(user_details, encoded)
+            # restore_token(json_obj['refresh_token'])
+        except:
+            make_request()
+            wait_for_response()
+            close_tab()
+            time.sleep(2)
+            get_token()
+
+        time.sleep(10)
