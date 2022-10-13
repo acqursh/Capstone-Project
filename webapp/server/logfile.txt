@@ -1,0 +1,6 @@
+127.0.0.1 - - [13/Oct/2022 20:52:04] code 501, message Unsupported method ('GET')
+127.0.0.1 - - [13/Oct/2022 20:52:04] "GET /login?code=f78d5ea4f222b28c121d30505349388cf88069f1 HTTP/1.1" 501 -
+Traceback (most recent call last):
+  File "C:\Users\mujoo\OneDrive\Documents\GitHub\CapstoneProject\webapp\server\script1.py", line 159, in <module>
+    time.sleep(10)
+KeyboardInterrupt

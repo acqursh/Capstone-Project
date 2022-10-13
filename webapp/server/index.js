@@ -1,8 +1,103 @@
+// const app = require('express')
+// const Fitbit = require('./fitbit');
+
+// import {oauth} from './fitbit';
+ 
+// app.use(express.cookieParser());
+// app.use(express.session({secret: 'hekdhthigib'}));
+// app.listen(3000);
+ 
+// // OAuth flow
+// app.get('/', function (req, res) {
+//   // Create an API client and start authentication via OAuth
+//   var client = new Fitbit(config.CONSUMER_KEY, config.CONSUMER_SECRET);
+ 
+//   client.getRequestToken(function (err, token, tokenSecret) {
+//     if (err) {
+//       // Take action
+//       return;
+//     }
+ 
+//     req.session.oauth = {
+//         requestToken: token
+//       , requestTokenSecret: tokenSecret
+//     };
+//     res.redirect(client.authorizeUrl(token));
+//   });
+// });
+ 
+// // On return from the authorization
+// app.get('/oauth_callback', function (req, res) {
+//   var verifier = req.query.oauth_verifier
+//     , oauthSettings = req.session.oauth
+//     , client = new Fitbit(config.CONSUMER_KEY, config.CONSUMER_SECRET);
+ 
+//   // Request an access token
+//   client.getAccessToken(
+//       oauthSettings.requestToken
+//     , oauthSettings.requestTokenSecret
+//     , verifier
+//     , function (err, token, secret) {
+//         if (err) {
+//           // Take action
+//           return;
+//         }
+ 
+//         oauthSettings.accessToken = token;
+//         oauthSettings.accessTokenSecret = secret;
+ 
+//         res.redirect('/stats');
+//       }
+//   );
+// });
+ 
+// // Display some stats
+// app.get('/stats', function (req, res) {
+//   client = new Fitbit(
+//       config.CONSUMER_KEY
+//     , config.CONSUMER_SECRET
+//     , { // Now set with access tokens
+//           accessToken: req.session.oauth.accessToken
+//         , accessTokenSecret: req.session.oauth.accessTokenSecret
+//         , unitMeasure: 'en_GB'
+//       }
+//   );
+ 
+//   // Fetch todays activities
+//   client.getActivities(function (err, activities) {
+//     if (err) {
+//       // Take action
+//       return;
+//     }
+ 
+//     // `activities` is a Resource model
+//     res.send('Total steps today: ' + activities.steps());
+//   });
+// });
+
 var mysql = require('mysql');
 const express = require('express');
-
+var {exec,spawn,fork} = require("child_process");
 const app = express();
 
+
+app.get('/home',(req,res)=>{
+  var dataToSend;
+  //const python = exec(`python ./testscript.py`); //create child process to call python script
+  var python = spawn('python',["./testscript.py"]);
+  python.stdout.on('data', function (data) {          //collect data from the script
+    console.log('Pipe data from python script ...');
+    console.log(data);
+    dataToSend = data.toString();
+    res.send(dataToSend);
+   });
+  python.on('close', (code) => {
+    console.log(`child process close all stdio with code ${code}`);
+    // send data to browser
+    console.log(dataToSend);
+    res.send(dataToSend)
+    });
+})
 var con = mysql.createConnection({
   host: "localhost",
   user: "root",
@@ -22,6 +117,6 @@ app.listen(3001, ()=>{console.log("Server started on port 3001")});
 // dotenv.config({path: "./config.env"});
 // const PORT = process.env.PORT;
 
-//paths to apis
+// paths to apis
 
-//app.use(require("./APIS/----------"));
+// app.use(require("./APIS/----------"));
