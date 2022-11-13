@@ -8,15 +8,15 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from flask_restful import Resource
 import tempfile
 from sqlalchemy.exc import IntegrityError
-from flask import request, make_response
+from flask import make_response
 
 from dotenv import load_dotenv
-
 import jwt
 import keyboard
 import requests
 import sqlalchemy as db
-from Common.init_database import db
+
+from Common.init_database import db, ma
 from Models.users import Users
 from Common.api_response import ApiResponse
 
@@ -25,6 +25,16 @@ api_response = ApiResponse()
 
 client_id = os.environ.get('CLIENT_ID')
 client_secret = os.environ.get('CLIENT_SECRET')
+
+
+class UserSchema(ma.Schema):
+    class Meta:
+        fields = (
+            'email', 'first_name', 'first_name', 'create_time', 'access_token', 'user_id', 'gender', 'weight', 'age'
+        )
+
+
+schema = UserSchema()
 
 
 class RegisterUser(Resource):
@@ -148,15 +158,8 @@ class RegisterUser(Resource):
         db.session.add(user)
         db.session.commit()
 
-    # except Exception as e:
-    #     print("Nor in main")
-    #     db.session.rollback()
-    #     print(e)
-    # print("user already exists")
-
     def get(self, email):
         try:
-            print(email)
             temp = tempfile.NamedTemporaryFile(delete=False)
             token = tempfile.NamedTemporaryFile(delete=False)
             RegisterUser.make_request()
