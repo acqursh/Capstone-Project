@@ -2,10 +2,10 @@ import numpy as np
 import pandas as pd
 
 df1 = pd.read_csv(
-    r"C:\Users\arkop\OneDrive\Desktop\College Stuff\Cap\CapstoneProject\Authentication Flow\Datasets\df.csv")
+    r"C:\Users\arkop\OneDrive\Desktop\Capstone\CapstoneProject\Data Fetch\Datasets\df.csv")
 
 df2 = pd.read_csv(
-    r"C:\Users\arkop\OneDrive\Desktop\College Stuff\Cap\CapstoneProject\Authentication Flow\Datasets\heart.csv")
+    r"C:\Users\arkop\OneDrive\Desktop\Capstone\CapstoneProject\Data Fetch\Datasets\heart.csv")
 
 df1 = df1.drop(['ca', 'thal'], axis=1)
 
@@ -69,5 +69,5 @@ merged_df["chol"] = merged_df["chol"].fillna(int(merged_df["chol"].median()))
 print(merged_df['chol'])
 
 merged_df.to_csv(
-    r"C:\Users\arkop\OneDrive\Desktop\College Stuff\Cap\CapstoneProject\Authentication Flow\Datasets\combined.csv",
+    r"C:\Users\arkop\OneDrive\Desktop\Capstone\CapstoneProject\Data Fetch\Datasets\combined.csv",
     index=False)

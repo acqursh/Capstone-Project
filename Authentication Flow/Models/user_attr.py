@@ -1,25 +1,22 @@
-from sqlalchemy import Column, Float, Integer, String, ForeignKey
-from sqlalchemy.ext.declarative import declarative_base
-from Models.users import User
-
-Base = declarative_base()
+import datetime
+from Common.init_database import db
 
 
-class User_attr(Base):
-    __tablename__ = 'user_attr'
-
-    user_id = Column(String(45), ForeignKey(User.user_id), primary_key=True)
-    age = Column(Integer)
-    sex = Column(String(10))
-    cp = Column(Integer)
-    trestbps = Column(Integer)
-    chol = Column(Integer)
-    fbs = Column(Integer)
-    restecg = Column(Integer)
-    thalach = Column(Integer)
-    exang = Column(Integer)
-    oldpeak = Column(Float)
-    slope = Column(Integer)
-    ca = Column(Integer)
-    thal = Column(Integer)
-    target = Column(Integer)
+class User_attr(db.Model):
+    # __tablename__ = 'user_attr'
+    email = db.Column(db.String(255))
+    user_id = db.Column(db.String(45), primary_key=True)
+    age = db.Column(db.Integer)
+    sex = db.Column(db.String(10))
+    cp = db.Column(db.Integer)
+    trestbps = db.Column(db.Integer)
+    chol = db.Column(db.Integer)
+    fbs = db.Column(db.Integer)
+    restecg = db.Column(db.Integer)
+    thalach = db.Column(db.Integer)
+    exang = db.Column(db.Integer)
+    oldpeak = db.Column(db.Float)
+    slope = db.Column(db.Integer)
+    ca = db.Column(db.Integer)
+    thal = db.Column(db.Integer)
+    target = db.Column(db.Integer)
