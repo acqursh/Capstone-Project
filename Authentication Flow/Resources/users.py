@@ -132,7 +132,7 @@ class RegisterUser(Resource):
         return details
 
     @staticmethod
-    def add_user(Details, Access_token):
+    def add_user(Details, Access_token, Email_id):
         # try:
         # encoded = jwt.encode(Access_token, 'secret', algorithm='HS256')
         user = Users(
@@ -142,7 +142,8 @@ class RegisterUser(Resource):
             last_name=Details['lastName'],
             user_id=Details['encodedId'],
             gender=Details['gender'],
-            weight=Details['weight']
+            weight=Details['weight'],
+            email=Email_id
         )
         db.session.add(user)
         db.session.commit()
@@ -153,8 +154,9 @@ class RegisterUser(Resource):
     #     print(e)
     # print("user already exists")
 
-    def get(self):
+    def get(self, email):
         try:
+            print(email)
             temp = tempfile.NamedTemporaryFile(delete=False)
             token = tempfile.NamedTemporaryFile(delete=False)
             RegisterUser.make_request()
@@ -169,7 +171,7 @@ class RegisterUser(Resource):
 
             decoded = jwt.decode(encoded, 'secret', algorithms=['HS256'])
             user_details = RegisterUser.get_user(decoded['access_token'])
-            RegisterUser.add_user(user_details, encoded)
+            RegisterUser.add_user(user_details, encoded, email)
             # restore_token(json_obj['refresh_token'])
             token.flush()
             token.close()
