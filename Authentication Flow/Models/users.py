@@ -3,10 +3,8 @@ from Common.init_database import db
 
 
 class Users(db.Model):
-    # __tablename__ = 'users'
-    user_id = db.Column(db.String(45), primary_key=True)
-    email = db.Column(db.String(255))
-    # password = db.Column(db.String(255))
+    user_id = db.Column(db.String(45))
+    email = db.Column(db.String(255), primary_key=True)
     first_name = db.Column(db.String(255))
     last_name = db.Column(db.String(255))
     access_token = db.Column(db.String(950))
