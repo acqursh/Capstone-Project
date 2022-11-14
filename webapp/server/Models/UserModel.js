@@ -4,28 +4,32 @@ import db from "../config/Database.js"
 const Users = db.sequelize.define(
   'user',
   {
-    id: {
-      type: Sequelize.INTEGER,
-      primaryKey: true,
-      autoIncrement: true
+    email_id: {
+      type: Sequelize.STRING,
+      primaryKey: true
     },
-    name: {
+    first_name: {
       type: Sequelize.STRING
     },
-    email: {
+    last_name: {
       type: Sequelize.STRING
     },
     password: {
       type: Sequelize.STRING
     },
-    createdAt: {
-      type: Sequelize.DATE,
-      defaultValue: Sequelize.NOW
+    gender: {
+      type: Sequelize.STRING
     },
-    updatedAt: {
-      type: Sequelize.DATE,
-      defaultValue: Sequelize.NOW
-    }
+    weight: {
+      type: Sequelize.INTEGER
+    },
+    age: {
+      type: Sequelize.INTEGER
+    },
+    user_id: {
+      type: Sequelize.INTEGER,
+      autoIncrement: true
+    },
   },
   {
     timestamps: false

@@ -32,6 +32,7 @@ export const Login = () => {
         } catch (error) {
             if (error.response) {
                 setMsg(error.response.data.msg);
+                alert(msg);
             }
         }
     }

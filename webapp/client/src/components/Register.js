@@ -5,7 +5,8 @@ import { Form,FormField,TextInput,Box,Button} from 'grommet';
  
 export const Register = () => {
     const [value,setValue] = useState({});
-    const [name, setName] = useState('');
+    const [firstname, setFirstName] = useState('');
+    const [lastname, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confPassword, setConfPassword] = useState('');
@@ -16,7 +17,8 @@ export const Register = () => {
         e.preventDefault();
         try {
             await axios.post('http://localhost:5000/users', {
-                name: name,
+                first_name: firstname,
+                last_name: lastname,
                 email: email,
                 password: password,
                 confPassword: confPassword
@@ -36,8 +38,11 @@ export const Register = () => {
                 onReset={() => setValue({})}
                 onSubmit={Register}
               >
-                <FormField name="name" htmlFor="text-input-id" label="Name" onChange={e => setName(e.target.value)}>
-                  <TextInput id="text-input-id" name="name" />
+                <FormField name="firstname" htmlFor="text-input-id" label="First Name" onChange={e => setFirstName(e.target.value)}>
+                  <TextInput id="text-input-id" name="firstname" />
+                </FormField>
+                <FormField name="lastname" htmlFor="text-input-id" label="Last Name" onChange={e => setLastName(e.target.value)}>
+                  <TextInput id="text-input-id" name="lastname" />
                 </FormField>
                 <FormField name="email" htmlFor="text-input-id" label="email" onChange={e => setEmail(e.target.value)}>
                   <TextInput id="text-input-id" name="email" />
