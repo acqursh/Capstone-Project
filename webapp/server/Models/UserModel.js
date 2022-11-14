@@ -9,10 +9,7 @@ const Users = db.sequelize.define(
       primaryKey: true,
       autoIncrement: true
     },
-    first_name: {
-      type: Sequelize.STRING
-    },
-    last_name: {
+    name: {
       type: Sequelize.STRING
     },
     email: {
@@ -21,7 +18,11 @@ const Users = db.sequelize.define(
     password: {
       type: Sequelize.STRING
     },
-    created: {
+    createdAt: {
+      type: Sequelize.DATE,
+      defaultValue: Sequelize.NOW
+    },
+    updatedAt: {
       type: Sequelize.DATE,
       defaultValue: Sequelize.NOW
     }

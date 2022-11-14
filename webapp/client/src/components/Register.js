@@ -1,15 +1,16 @@
 import React, { useState } from 'react'
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Form,FormField,TextInput,Box,Button} from 'grommet';
  
 export const Register = () => {
+    const [value,setValue] = useState({});
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confPassword, setConfPassword] = useState('');
     const [msg, setMsg] = useState('');
     const navigate = useNavigate();
-    const history = navigate();
  
     const Register = async (e) => {
         e.preventDefault();
@@ -20,7 +21,7 @@ export const Register = () => {
                 password: password,
                 confPassword: confPassword
             });
-            history.push("/");
+            navigate("/");
         } catch (error) {
             if (error.response) {
                 setMsg(error.response.data.msg);
@@ -29,47 +30,31 @@ export const Register = () => {
     }
  
     return (
-        <section className="hero has-background-grey-light is-fullheight is-fullwidth">
-            <div className="hero-body">
-                <div className="container">
-                    <div className="columns is-centered">
-                        <div className="column is-4-desktop">
-                            <form onSubmit={Register} className="box">
-                                <p className="has-text-centered">{msg}</p>
-                                <div className="field mt-5">
-                                    <label className="label">Name</label>
-                                    <div className="controls">
-                                        <input type="text" className="input" placeholder="Name"
-                                            value={name} onChange={(e) => setName(e.target.value)} />
-                                    </div>
-                                </div>
-                                <div className="field mt-5">
-                                    <label className="label">Email</label>
-                                    <div className="controls">
-                                        <input type="text" className="input" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-                                    </div>
-                                </div>
-                                <div className="field mt-5">
-                                    <label className="label">Password</label>
-                                    <div className="controls">
-                                        <input type="password" className="input" placeholder="******" value={password} onChange={(e) => setPassword(e.target.value)} />
-                                    </div>
-                                </div>
-                                <div className="field mt-5">
-                                    <label className="label">Confirm Password</label>
-                                    <div className="controls">
-                                        <input type="password" className="input" placeholder="******" value={confPassword} onChange={(e) => setConfPassword(e.target.value)} />
-                                    </div>
-                                </div>
-                                <div className="field mt-5">
-                                    <button className="button is-success is-fullwidth">Register</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <Form
+                value={value}
+                onChange={nextValue => setValue(nextValue)}
+                onReset={() => setValue({})}
+                onSubmit={Register}
+              >
+                <FormField name="name" htmlFor="text-input-id" label="Name" onChange={e => setName(e.target.value)}>
+                  <TextInput id="text-input-id" name="name" />
+                </FormField>
+                <FormField name="email" htmlFor="text-input-id" label="email" onChange={e => setEmail(e.target.value)}>
+                  <TextInput id="text-input-id" name="email" />
+                </FormField>
+                <FormField name="password" htmlFor="text-input-id" label="password" onChange={e => setPassword(e.target.value)}>
+                  <TextInput id="text-input-id" name="password" />
+                </FormField>
+                <FormField name="confPassword" htmlFor="text-input-id" label="Confirm Password" onChange={e => setConfPassword(e.target.value)}>
+                  <TextInput id="text-input-id" name="confPassword" />
+                </FormField>
+                <Box direction="row" gap="medium">
+                  <Button type="submit" primary label="Register" />
+                  <Button type="reset" label="Reset" />
+                </Box>
+              </Form>
+
+        
     )
 }
  

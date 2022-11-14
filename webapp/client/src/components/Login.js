@@ -1,58 +1,61 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-
+import { renderMatches, useNavigate } from 'react-router-dom';
+import { Form,FormField,TextInput,Box,Button} from 'grommet';
  
 export const Login = () => {
+
+    useEffect(() => {
+        // Update the document title using the browser API
+          
+      });
+    
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [value, setValue] = useState({});
     const [msg, setMsg] = useState('');
     const navigate = useNavigate();
-    const history = navigate();
- 
+    let axiosConfig = {
+        headers: {
+            'Content-Type': 'application/json;charset=UTF-8',
+            "Access-Control-Allow-Origin": "*",
+        }
+      };
     const Auth = async (e) => {
         e.preventDefault();
         try {
             await axios.post('http://localhost:5000/login', {
                 email: email,
-                password: password
-            });
-            history.push("/dashboard");
+                password: password,
+            },axiosConfig);
+            navigate("/dashboard");
         } catch (error) {
             if (error.response) {
                 setMsg(error.response.data.msg);
             }
         }
     }
- 
-    return (
-        <section className="hero has-background-grey-light is-fullheight is-fullwidth">
-            <div className="hero-body">
-                <div className="container">
-                    <div className="columns is-centered">
-                        <div className="column is-4-desktop">
-                            <form onSubmit={Auth} className="box">
-                                <p className="has-text-centered">{msg}</p>
-                                <div className="field mt-5">
-                                    <label className="label">Email or Username</label>
-                                    <div className="controls">
-                                        <input type="text" className="input" placeholder="Username" value={email} onChange={(e) => setEmail(e.target.value)} />
-                                    </div>
-                                </div>
-                                <div className="field mt-5">
-                                    <label className="label">Password</label>
-                                    <div className="controls">
-                                        <input type="password" className="input" placeholder="******" value={password} onChange={(e) => setPassword(e.target.value)} />
-                                    </div>
-                                </div>
-                                <div className="field mt-5">
-                                    <button className="button is-success is-fullwidth">Login</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    )
-}
+    
+           
+            return (
+              <Form
+                value={value}
+                onChange={nextValue => setValue(nextValue)}
+                onReset={() => setValue({})}
+                onSubmit={Auth}
+              >
+                <FormField name="email" htmlFor="text-input-id" label="Email-id" onChange={e => setEmail(e.target.value)}>
+                  <TextInput id="text-input-id" name="email-id" />
+                </FormField>
+                <FormField name="password" htmlFor="text-input-id" label="Password" onChange={e => setPassword(e.target.value)}>
+                  <TextInput id="text-input-id" name="password" />
+                </FormField>
+                <Box direction="row" gap="medium">
+                  <Button type="submit" primary label="Submit" />
+                  <Button type="reset" label="Reset" />
+                </Box>
+              </Form>
+            )
+          }
+
+        
