@@ -14,28 +14,16 @@ app = Flask(__name__)
 CORS(app)
 api = Api(app)
 
+path = os.path.dirname(os.path.abspath(__file__))
+upload_folder = os.path.join(
+    path.replace("/file_folder", ""), "tmp")
+os.makedirs(upload_folder, exist_ok=True)
 
+app.config["UPLOAD_FOLDER"] = upload_folder
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQL_DATABASE_URI')
 
 initialize_db(app)
 initialize_routes(api)
-
-# db = SQLAlchemy(app)
-
-
-# @app.route('/register')
-# def register_user():  # put application's code here
-#
-#     main()
-#     return 'Hello World!'
-#
-#
-# @app.route('/attr')
-# def get_user_attr():  # put application's code here
-#
-#     # main()
-#     return 'Attr!'
-
 
 if __name__ == '__main__':
     app.run(

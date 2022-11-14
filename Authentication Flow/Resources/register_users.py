@@ -14,7 +14,6 @@ from dotenv import load_dotenv
 import jwt
 import keyboard
 import requests
-import sqlalchemy as db
 
 from Common.init_database import db, ma
 from Models.users import Users
