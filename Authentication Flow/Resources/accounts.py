@@ -12,7 +12,7 @@ from sqlalchemy.exc import IntegrityError
 class LoginSchema(ma.Schema):
     class Meta:
         fields = (
-            'email_id', 'password', 'name'
+            'email_id', 'password'
         )
 
 
@@ -27,8 +27,7 @@ class LoginUser(Resource):
             print(details)
             account = Accounts(
                 email_id=details["email_id"],
-                password=details["password"],
-                name=details["name"]
+                password=details["password"]
             )
 
             db.session.add(account)
