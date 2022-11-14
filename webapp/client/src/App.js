@@ -1,25 +1,19 @@
-import Loginform from './loginform';
-import RegisterForm from './RegisterForm';
-import './App.css';
-import { createContext, useReducer, useState } from 'react';
-import PageRoutes from './Routes';
-import {BrowserRouter as Router} from "react-router-dom";
-
-export const UserContext = createContext();
-
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import {Dashboard} from "./components/Dashboard";
+import {Login} from "./components/Login";
+import {Navbar} from "./components/Navbar";
+import {Register} from "./components/Register";
+ 
 function App() {
-
-  const [user,setUser] = useState({
-    first_name: "",
-    last_name: "",
-    email: "",
-  });
-
   return (
-    <Router>
-      <PageRoutes/>
-    </Router>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/register" element={<Register/>} />
+        <Route path="/dashboard" element={<Dashboard/>} />
+      </Routes>
+    </BrowserRouter>
   );
 }
-
+ 
 export default App;
