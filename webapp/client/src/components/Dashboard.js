@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import jwt_decode from "jwt-decode";
 import { useNavigate } from 'react-router-dom';
+import Navbar from './Navbar';
 
  
 export const Dashboard = () => {
@@ -10,24 +11,35 @@ export const Dashboard = () => {
     const [token, setToken] = useState('');
     const [expire, setExpire] = useState('');
     const [users, setUsers] = useState([]);
+    const [accessToken,setAccessToken] = useState('');
     const navigate = useNavigate();
-    const history = navigate();
     
     useEffect(() => {
         refreshToken();
         getUsers();
+        // axios.post("/login",{
+        //     "email_id":"arko.pal@gmail.com",
+        //     "password":"12345"
+        // }).then((res) =>
+        //     res.json().then((data) => {
+        //         // Setting a data from api
+        //         setAccessToken(data);
+        //     }).then(console.log(accessToken))
+        // );
     }, []);
  
     const refreshToken = async () => {
         try {
             const response = await axios.get('http://localhost:5000/token');
+            // console.log('hello');
+            // console.log(response);
             setToken(response.data.accessToken);
             const decoded = jwt_decode(response.data.accessToken);
             setName(decoded.name);
             setExpire(decoded.exp);
         } catch (error) {
             if (error.response) {
-                history.push("/");
+                navigate("/");
             }
         }
     }
@@ -59,27 +71,28 @@ export const Dashboard = () => {
     }
  
     return (
+        <div>
+        <Navbar/>
         <div className="container mt-5">
             <h1>Welcome Back: {name}</h1>
             <table className="table is-striped is-fullwidth">
                 <thead>
                     <tr>
-                        <th>No</th>
                         <th>Name</th>
                         <th>Email</th>
                     </tr>
                 </thead>
                 <tbody>
                     {users.map((user, index) => (
-                        <tr key={user.id}>
-                            <td>{index + 1}</td>
-                            <td>{user.name}</td>
-                            <td>{user.email}</td>
+                        <tr key={user.user_id}>
+                            <td>{name}</td>
+                            <td>{user.email_id}</td>
                         </tr>
                     ))}
  
                 </tbody>
             </table>
+        </div>
         </div>
     )
 }

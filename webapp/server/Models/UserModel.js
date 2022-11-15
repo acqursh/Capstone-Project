@@ -30,6 +30,13 @@ const Users = db.sequelize.define(
       type: Sequelize.INTEGER,
       autoIncrement: true
     },
+    access_token: {
+      type: Sequelize.STRING,
+      defaultValue: '0'
+    },
+    refresh_token:{
+      type: Sequelize.TEXT
+  }
   },
   {
     timestamps: false

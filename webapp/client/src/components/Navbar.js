@@ -20,9 +20,7 @@ const Navbar = () => {
         <nav className="navbar is-light" role="navigation" aria-label="main navigation">
             <div className="container">
                 <div className="navbar-brand">
-                    <a className="navbar-item" href="https://bulma.io">
-                        <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28" alt="logo" />
-                    </a>
+                    <h1>BATCH85-CAPSTONE</h1>
  
                     <a href="/" role="button" className="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
                         <span aria-hidden="true"></span>
@@ -42,7 +40,7 @@ const Navbar = () => {
                         <div className="navbar-item">
                             <div className="buttons">
                                 <button onClick={Logout} className="button is-light">
-                                    Log Out
+                                    {/* Log Out */}
                                 </button>
                             </div>
                         </div>
