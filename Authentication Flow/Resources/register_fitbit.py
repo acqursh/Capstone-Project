@@ -9,6 +9,7 @@ from flask_restful import Resource
 import tempfile
 from sqlalchemy.exc import IntegrityError
 from flask import make_response
+from flask_praetorian import auth_required, current_user
 
 from dotenv import load_dotenv
 import jwt
@@ -16,7 +17,7 @@ import keyboard
 import requests
 
 from Common.init_database import db, ma
-from Models.users import Users
+from Models.fitbit_users import Fitbit_users
 from Common.api_response import ApiResponse
 
 load_dotenv()
@@ -26,17 +27,17 @@ client_id = os.environ.get('CLIENT_ID')
 client_secret = os.environ.get('CLIENT_SECRET')
 
 
-class UserSchema(ma.Schema):
+class FitbitUserSchema(ma.Schema):
     class Meta:
         fields = (
-            'email', 'first_name', 'first_name', 'create_time', 'access_token', 'user_id', 'gender', 'weight', 'age'
+            'email_id', 'first_name', 'first_name', 'create_time', 'access_token', 'user_id', 'gender', 'weight', 'age'
         )
 
 
-schema = UserSchema()
+schema = FitbitUserSchema()
 
 
-class RegisterUser(Resource):
+class RegisterFitbit(Resource):
 
     @staticmethod
     def make_request():
@@ -79,7 +80,7 @@ class RegisterUser(Resource):
             headers = {
                 'Authorization': f'Basic {auth_token[2:-1]}',
             }
-            code = RegisterUser.read_log(temp_file)
+            code = RegisterFitbit.read_log(temp_file)
 
             data = {
                 'clientId': f'{client_id}',
@@ -142,9 +143,7 @@ class RegisterUser(Resource):
 
     @staticmethod
     def add_user(Details, Access_token, Email_id):
-        # try:
-        # encoded = jwt.encode(Access_token, 'secret', algorithm='HS256')
-        user = Users(
+        user = Fitbit_users(
             access_token=Access_token,
             age=Details['age'],
             first_name=Details['firstName'],
@@ -152,28 +151,29 @@ class RegisterUser(Resource):
             user_id=Details['encodedId'],
             gender=Details['gender'],
             weight=Details['weight'],
-            email=Email_id
+            email_id=Email_id
         )
         db.session.add(user)
         db.session.commit()
 
-    def get(self, email):
+    @auth_required
+    def get(self):
         try:
             temp = tempfile.NamedTemporaryFile(delete=False)
             token = tempfile.NamedTemporaryFile(delete=False)
-            RegisterUser.make_request()
-            RegisterUser.wait_for_response(temp)
-            RegisterUser.close_tab()
+            RegisterFitbit.make_request()
+            RegisterFitbit.wait_for_response(temp)
+            RegisterFitbit.close_tab()
             time.sleep(2)
-            RegisterUser.get_token(temp, token)
+            RegisterFitbit.get_token(temp, token)
             temp.flush()
             temp.close()
             with open(token.name, "r") as f:
                 encoded = f.read()
 
             decoded = jwt.decode(encoded, 'secret', algorithms=['HS256'])
-            user_details = RegisterUser.get_user(decoded['access_token'])
-            RegisterUser.add_user(user_details, encoded, email)
+            user_details = RegisterFitbit.get_user(decoded['access_token'])
+            RegisterFitbit.add_user(user_details, encoded, current_user().email_id)
             # restore_token(json_obj['refresh_token'])
             token.flush()
             token.close()

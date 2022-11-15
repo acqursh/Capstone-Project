@@ -1,10 +1,11 @@
 import sqlalchemy
 from Models.user_attr import User_attr
-from Models.users import Users
+from Models.fitbit_users import Fitbit_users
 from Common.init_database import ma, db
 from Common.api_response import ApiResponse
 
 from flask_restful import Resource
+from flask_praetorian import auth_required, current_user
 from flask import make_response, request
 
 import requests
@@ -12,22 +13,23 @@ import jwt
 from sqlalchemy.exc import IntegrityError
 
 
-class UserAttrSchema(ma.Schema):
+class FitbitUserAttrSchema(ma.Schema):
     class Meta:
         fields = (
             'email', 'user_id', 'age', 'sex', 'cp', 'trtbps', 'chol', 'fbs', 'restecg', 'thalachh', 'slp', 'output'
         )
 
 
-schema = UserAttrSchema()
+schema = FitbitUserAttrSchema()
 api_response = ApiResponse()
 
 
 class GetUserAttr(Resource):
-    def post(self, email_id):
+    @auth_required
+    def post(self):
         try:
             json_data = request.json
-            user = Users.query.filter_by(email=email_id).first()
+            user = Fitbit_users.query.filter_by(email_id=current_user().email_id).first()
             decoded = jwt.decode(user.access_token, 'secret', algorithms=['HS256'])
             access_token = decoded['access_token']
             headers = {
@@ -60,7 +62,7 @@ class GetUserAttr(Resource):
 
             try:
                 user_attr = User_attr(
-                    email=email_id,
+                    email=current_user().email_id,
                     age=user.age,
                     sex=gender,
                     thalachh=max(thalach),
@@ -82,7 +84,7 @@ class GetUserAttr(Resource):
 
             except sqlalchemy.exc.IntegrityError as e:
                 db.session.rollback()
-                user_attr = User_attr.query.get_or_404(email_id)
+                user_attr = User_attr.query.get_or_404(current_user().email_id)
 
                 if 'cp' in request.json:
                     user_attr.cp = request.json['cp']

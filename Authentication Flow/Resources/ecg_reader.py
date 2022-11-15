@@ -5,6 +5,7 @@ from Common.init_database import db
 from PyPDF2 import PdfFileReader
 
 from flask_restful import Resource
+from flask_praetorian import auth_required, current_user
 from flask import make_response, request
 
 
@@ -13,10 +14,11 @@ api_response = ApiResponse()
 
 class ReadECG(Resource):
 
-    def patch(self, email_id):
+    @auth_required
+    def patch(self):
 
         try:
-            user_attr = User_attr.query.get_or_404(email_id)
+            user_attr = User_attr.query.get_or_404(current_user().email_id)
 
             if 'file' not in request.files:
                 return "No file attached"

@@ -5,7 +5,9 @@ from flask import Flask
 from flask_cors import CORS
 from flask_restful import Api
 from Common.routes import initialize_routes
-from Common.init_database import initialize_db
+from Common.init_database import initialize_db, guard
+from Common.logging import is_blacklisted
+from Models.users import Users
 
 load_dotenv()
 
@@ -21,7 +23,10 @@ os.makedirs(upload_folder, exist_ok=True)
 
 app.config["UPLOAD_FOLDER"] = upload_folder
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQL_DATABASE_URI')
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 
+
+guard.init_app(app, Users, is_blacklisted=is_blacklisted)
 initialize_db(app)
 initialize_routes(api)
 
