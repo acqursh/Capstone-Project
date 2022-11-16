@@ -4,6 +4,7 @@ from Resources.ecg_reader import ReadECG
 from Resources.users import User
 from Common.logging import LoginAPI, LogoutAPI
 from Resources.registration import Registration
+from Resources.get_user import GetUsers
 
 
 def initialize_routes(api):
@@ -18,5 +19,7 @@ def initialize_routes(api):
     api.add_resource(GetUserAttr, "/user_attr")
 
     api.add_resource(User, "/users")
+
+    api.add_resource(GetUsers, "/users_attr")
 
     api.add_resource(ReadECG, "/ecg")

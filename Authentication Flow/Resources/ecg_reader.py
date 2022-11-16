@@ -1,6 +1,7 @@
 from Models.user_attr import User_attr
 from Common.api_response import ApiResponse
 from Common.init_database import db
+from Resources.user_attr import FitbitUserAttrSchema
 
 from PyPDF2 import PdfFileReader
 
@@ -8,7 +9,7 @@ from flask_restful import Resource
 from flask_praetorian import auth_required, current_user
 from flask import make_response, request
 
-
+schema = FitbitUserAttrSchema()
 api_response = ApiResponse()
 
 
