@@ -16,12 +16,12 @@ export const Register = () => {
     const Register = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:5000/users', {
-                first_name: firstname,
-                last_name: lastname,
-                email: email,
+            axios.post('/register', {
+                // first_name: firstname,
+                // last_name: lastname,
+                email_id: email,
                 password: password,
-                confPassword: confPassword
+                //confPassword: confPassword
             });
             navigate("/");
         } catch (error) {
@@ -32,33 +32,37 @@ export const Register = () => {
     }
  
     return (
+      <Box>
+      <Box>
+        REGISTER FORM
+      </Box>
         <Form
                 value={value}
                 onChange={nextValue => setValue(nextValue)}
                 onReset={() => setValue({})}
                 onSubmit={Register}
               >
-                <FormField name="firstname" htmlFor="text-input-id" label="First Name" onChange={e => setFirstName(e.target.value)}>
+                {/* <FormField name="firstname" htmlFor="text-input-id" label="First Name" onChange={e => setFirstName(e.target.value)}>
                   <TextInput id="text-input-id" name="firstname" />
                 </FormField>
                 <FormField name="lastname" htmlFor="text-input-id" label="Last Name" onChange={e => setLastName(e.target.value)}>
                   <TextInput id="text-input-id" name="lastname" />
-                </FormField>
+                </FormField> */}
                 <FormField name="email" htmlFor="text-input-id" label="email" onChange={e => setEmail(e.target.value)}>
                   <TextInput id="text-input-id" name="email" />
                 </FormField>
                 <FormField name="password" htmlFor="text-input-id" label="password" onChange={e => setPassword(e.target.value)}>
                   <TextInput id="text-input-id" name="password" />
-                </FormField>
+                {/* </FormField>
                 <FormField name="confPassword" htmlFor="text-input-id" label="Confirm Password" onChange={e => setConfPassword(e.target.value)}>
-                  <TextInput id="text-input-id" name="confPassword" />
+                  <TextInput id="text-input-id" name="confPassword" /> */}
                 </FormField>
                 <Box direction="row" gap="medium">
                   <Button type="submit" primary label="Register" />
                   <Button type="reset" label="Reset" />
                 </Box>
               </Form>
-
+</Box>
         
     )
 }

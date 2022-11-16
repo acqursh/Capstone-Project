@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import { renderMatches, useNavigate } from 'react-router-dom';
-import { Form,FormField,TextInput,Box,Button} from 'grommet';
+import { Form,FormField,TextInput,Box,Button,Header,Menu} from 'grommet';
  
 export const Login = () => {
 
@@ -15,6 +15,7 @@ export const Login = () => {
     const [value, setValue] = useState({});
     const [msg, setMsg] = useState('');
     const navigate = useNavigate();
+    const [accessToken,setAccessToken] = useState('');
     let axiosConfig = {
         headers: {
             'Content-Type': 'application/json;charset=UTF-8',
@@ -24,21 +25,29 @@ export const Login = () => {
     const Auth = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:5000/login', {
-                email: email,
+            await axios.post('login', {
+                email_id: email,
                 password: password,
-            },axiosConfig);
+            },axiosConfig,).then((res) =>
+                {
+                  console.log(res.data);
+                });
             navigate("/dashboard");
         } catch (error) {
             if (error.response) {
                 setMsg(error.response.data.msg);
-                alert(msg);
+                alert('User is not registered');
             }
         }
     }
     
            
             return (
+              <Box>
+                <Box>
+                  LOGIN FORM
+                </Box>
+              
               <Form
                 value={value}
                 onChange={nextValue => setValue(nextValue)}
@@ -56,6 +65,7 @@ export const Login = () => {
                   <Button type="reset" label="Reset" />
                 </Box>
               </Form>
+              </Box>
             )
           }
 

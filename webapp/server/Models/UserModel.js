@@ -34,9 +34,9 @@ const Users = db.sequelize.define(
       type: Sequelize.STRING,
       defaultValue: '0'
     },
-    refresh_token:{
-      type: Sequelize.TEXT
-  }
+  //   refresh_token:{
+  //     type: Sequelize.TEXT
+  // }
   },
   {
     timestamps: false
