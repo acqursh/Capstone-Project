@@ -30,7 +30,7 @@ client_secret = os.environ.get('CLIENT_SECRET')
 class FitbitUserSchema(ma.Schema):
     class Meta:
         fields = (
-            'email_id', 'first_name', 'first_name', 'create_time', 'access_token', 'user_id', 'gender', 'weight', 'age'
+            'email_id', 'first_name', 'last_name', 'create_time', 'access_token', 'user_id', 'gender', 'weight', 'age'
         )
 
 

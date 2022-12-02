@@ -53,11 +53,16 @@ def convert_slope(text):
     return 0
 
 
+def convert_chol(text):
+    return int(text)
+
+
 df2['sex'] = df2['sex'].apply(convert_sex)
 df2['cp'] = df2['cp'].apply(convert_cp)
 df2['restecg'] = df2['restecg'].apply(convert_restecg)
 df2['exang'] = df2['exang'].apply(convert_exang)
 df2['slope'] = df2['slope'].apply(convert_slope)
+df2['chol'] = df2['chol'].apply(convert_chol)
 
 frames = [df1, df2]
 
@@ -65,9 +70,10 @@ merged_df = pd.concat(frames)
 
 merged_df.loc[merged_df['chol'] == 0, 'chol'] = np.nan
 merged_df["chol"] = merged_df["chol"].fillna(int(merged_df["chol"].median()))
+merged_df.drop(['exang','oldpeak'], axis=1, inplace=True)
 
-print(merged_df['chol'])
+print(merged_df.head())
 
-merged_df.to_csv(
-    r"C:\Users\arkop\OneDrive\Desktop\Capstone\CapstoneProject\Data Fetch\Datasets\combined.csv",
-    index=False)
+# merged_df.to_csv(
+#     r"C:\Users\arkop\OneDrive\Desktop\Capstone\CapstoneProject\Data Fetch\Datasets\combined.csv",
+#     index=False)

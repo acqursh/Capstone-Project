@@ -13,9 +13,9 @@ api_response = ApiResponse()
 class GetUsers(Resource):
     def get(self):
         try:
-            users = User_attr.query.all()
-            for user in users:
-                print(user.email, user.sex)
+            # users = User_attr.query.all()
+            # for user in users:
+            #     print(user.email, user.sex)
             return schema.dump(User_attr.query.all())
 
         except Exception as e:

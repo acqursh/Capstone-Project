@@ -1,11 +1,8 @@
-import joblib
-from pandas import read_csv
 import os
-import requests
-
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 
 def create_model():

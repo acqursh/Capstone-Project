@@ -16,7 +16,7 @@ from sqlalchemy.exc import IntegrityError
 class FitbitUserAttrSchema(ma.Schema):
     class Meta:
         fields = (
-            'email', 'user_id', 'age', 'sex', 'cp', 'trtbps', 'chol', 'fbs', 'restecg', 'thalachh', 'slp', 'output'
+            'email', 'age', 'sex', 'cp', 'trtbps', 'chol', 'fbs', 'restecg', 'thalachh', 'slp', 'target'
         )
 
 
@@ -24,7 +24,24 @@ schema = FitbitUserAttrSchema()
 api_response = ApiResponse()
 
 
-class GetUserAttr(Resource):
+class UserAttrs(Resource):
+
+    @auth_required
+    def get(self):
+        try:
+            return schema.dump(User_attr.query.get_or_404(current_user().email_id))
+
+        except Exception as e:
+            db.session.rollback()
+            error = e
+            api_response.success.clear()
+            api_response.errors.clear()
+            api_response.errors.append(error)
+            api_response.message = "Please enter valid data"
+            api_response.status = "Fail"
+
+            return make_response(api_response.to_json(), 500)
+
     @auth_required
     def post(self):
         try:
@@ -36,7 +53,7 @@ class GetUserAttr(Resource):
                 'accept': 'application/json',
                 'authorization': f'Bearer {access_token}',
             }
-            url = f"https://api.fitbit.com/1/user/{user.user_id}/activities/heart/date/2022-11-09/1d.json"
+            url = f"https://api.fitbit.com/1/user/{user.user_id}/activities/heart/date/today/1d.json"
             response = requests.get(url, headers=headers, timeout=5)
             data = response.json()['activities-heart']
             response.close()
@@ -48,10 +65,9 @@ class GetUserAttr(Resource):
                 if heart_rate['caloriesOut'] > 0:
                     if heart_rate['name'] == 'Peak':
                         maxHR = heart_rate['max'] - user.age
-                        # print(heart_rate, maxHR)
                         thalach.append((maxHR + heart_rate['min']) / 2)
                     else:
-                        print(heart_rate, (heart_rate['max'] + heart_rate['min']) // 2)
+                        # print(heart_rate, (heart_rate['max'] + heart_rate['min']) // 2)
                         thalach.append((heart_rate['max'] + heart_rate['min']) // 2)
 
             if user.gender == "MALE":
@@ -115,7 +131,7 @@ class GetUserAttr(Resource):
 
         except Exception as e:
             db.session.rollback()
-            error = "Something went wrong please check the data again"
+            error = e
             api_response.success.clear()
             api_response.errors.clear()
             api_response.errors.append(error)

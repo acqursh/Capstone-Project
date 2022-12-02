@@ -1,6 +1,8 @@
+import joblib
 from Models.user_attr import User_attr
 from Common.api_response import ApiResponse
 from Common.init_database import db
+from Common.model import create_model
 from Resources.user_attr import FitbitUserAttrSchema
 
 from PyPDF2 import PdfFileReader
@@ -14,6 +16,16 @@ api_response = ApiResponse()
 
 
 class ReadECG(Resource):
+
+    @staticmethod
+    def predict_output(attrs):
+
+        create_model()
+        m_jlib = joblib.load(
+            r'C:\Users\arkop\OneDrive\Desktop\Capstone\CapstoneProject\Authentication '
+            r'Flow\Monitoring and alerting\model1.pkl')
+
+        return m_jlib.predict([attrs])
 
     @auth_required
     def patch(self):
@@ -41,6 +53,16 @@ class ReadECG(Resource):
 
                 else:
                     user_attr.restecg = 1
+
+            if user_attr.fbs < 120:
+                fbs = 0
+            else:
+                fbs = 1
+
+            user_attr.target = int(ReadECG.predict_output(
+                [user_attr.age, user_attr.sex, user_attr.cp, user_attr.trtbps, user_attr.chol, fbs,
+                 user_attr.restecg, user_attr.thalachh, user_attr.slp]
+            )[0])
 
             db.session.commit()
 

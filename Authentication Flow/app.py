@@ -8,6 +8,7 @@ from Common.routes import initialize_routes
 from Common.init_database import initialize_db, guard
 from Common.logging import is_blacklisted
 from Models.users import Users
+from Common.model import create_model
 
 load_dotenv()
 
