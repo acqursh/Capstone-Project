@@ -75,6 +75,7 @@ class ReadECG(Resource):
             return make_response(api_response.to_json(), 200)
 
         except Exception as e:
+            print(e)
             db.session.rollback()
             error = "Something went wrong please check the data again"
             api_response.success.clear()
