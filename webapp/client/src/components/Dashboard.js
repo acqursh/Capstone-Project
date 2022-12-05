@@ -308,7 +308,7 @@ const ECGform = (props) => {
               type="text"
               id="name"
               className="formFieldInput"
-              placeholder="Enter cp"
+              placeholder="Enter chest pain type"
               name="name"
               value={this.state.name}
               onChange={this.handleChange}
@@ -408,7 +408,54 @@ function UserDetails(props){
   return (
     <Box>
       <Box>
-        Show all the vitals retreived from fitbit
+        <br/>
+        <br/>
+        <br/>
+      </Box>
+      <Box>
+      <table>
+        <tr>
+          <td>Age</td>
+          <td>21</td>
+        </tr>
+        <tr>
+          <td>Sex</td>
+          <td>Male</td>
+        </tr>
+        <tr>
+          <td>Maximum Heart Rate recorded</td>
+          <td>73</td>
+        </tr>
+        <tr>
+          <td>Chets Pain Type</td>
+          <td>Typical Angina</td>
+        </tr>
+        <tr>
+          <td>Fasting Blood Sugar</td>
+          <td>90</td>
+        </tr>
+        <tr>
+          <td>Blood Cholestrol</td>
+          <td>140</td>
+        </tr>
+        <tr>
+          <td>Blood Pressure</td>
+          <td>145</td>
+        </tr>
+        <tr>
+          <td>Resting ECG category</td>
+          <td>Normal</td>
+        </tr>
+        <tr>
+          <td>Slope</td>
+          <td>1</td>
+        </tr>
+      </table>
+      </Box>
+      <Box>
+        <br/>
+        <br/>
+        <br/>
       </Box>
       <Box gap="medium">
         <Button type="submit" primary label="Generate Report" onClick={onSubmit} />

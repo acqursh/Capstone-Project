@@ -79,7 +79,8 @@ class SignUpForm extends Component {
     this.state = {
       email: "",
       password: "",
-      name: "",
+      firstname: "",
+      lastname: "",
       hasAgreed: false
     };
 
@@ -114,11 +115,11 @@ class SignUpForm extends Component {
             </label>
             <input
               type="text"
-              id="name"
+              id="firstname"
               className="formFieldInput"
               placeholder="Enter first name"
-              name="name"
-              value={this.state.name}
+              name="firstname"
+              value={this.state.firstname}
               onChange={this.handleChange}
             />
           </div>
@@ -128,11 +129,11 @@ class SignUpForm extends Component {
             </label>
             <input
               type="text"
-              id="name"
+              id="lastname"
               className="formFieldInput"
               placeholder="Enter last name"
-              name="name"
-              value={this.state.name}
+              name="lastname"
+              value={this.state.lastname}
               onChange={this.handleChange}
             />
           </div>

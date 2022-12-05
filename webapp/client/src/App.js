@@ -32,7 +32,15 @@ class App extends Component {
     return (
       <Router basename="/">
         <div className="App">
-          <div className="appAside" />
+          <div className="appAside" >
+            <div className="logoandstuff">
+            
+            <h1>
+              BATCH 85 CAPSTONE
+            </h1>
+            
+            </div>
+          </div>
           <div className="appForm">
             <div className="pageSwitcher">
               <NavLink

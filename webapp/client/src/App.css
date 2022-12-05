@@ -8,7 +8,20 @@
   width: 50%;
   background-color: #6b5b95;
 }
-
+.logoandstuff {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 150px;
+}
+.heartlogo {
+  width: 150%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 150px;
+}
 .appForm {
   width: 50%;
   background-color: #12130f;
