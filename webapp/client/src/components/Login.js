@@ -70,6 +70,7 @@
 //           }
 import React, { Component } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import axios from 'axios';
 
 class SignInForm extends Component {
   constructor() {
@@ -77,12 +78,20 @@ class SignInForm extends Component {
 
     this.state = {
       email: "",
-      password: ""
+      password: "",
+      axiosConfig : {
+        headers: {
+            'Content-Type': 'application/json;charset=UTF-8',
+            "Access-Control-Allow-Origin": "*",
+        }
+      },
+      accessToken: "",
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
+      
 
   handleChange(event) {
     let target = event.target;
@@ -94,14 +103,31 @@ class SignInForm extends Component {
     });
   }
 
-  handleSubmit(event) {
+  handleSubmit = async(event)=> {
     event.preventDefault();
 
     console.log("The form was submitted with the following data:");
     
     console.log(this.state);
     
-  }
+    try {
+                  await axios.post('login', {
+                      email_id: this.state.email,
+                      password: this.state.password,
+                  },this.state.axiosConfig,).then((res) =>
+                      {
+                        console.log(res.data);
+                      });
+                  //navigate("/dashboard");
+              } catch (error) {
+                  if (error.response) {
+                      console.log(error.response.data.msg);
+                      alert('User is not registered');
+                  }
+              }
+          
+    }
+  
 
   render() {
     return (

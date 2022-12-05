@@ -58,21 +58,21 @@ export const Dashboard = () => {
         }
         }
     
-    const refreshToken = async () => {
-        try {
-            const response = await axios.get('http://localhost:5000/token');
-            // console.log('hello');
-            // console.log(response);
-            setToken(response.data.accessToken);
-            const decoded = jwt_decode(response.data.accessToken);
-            setName(decoded.name);
-            setExpire(decoded.exp);
-        } catch (error) {
-            if (error.response) {
-                navigate("/");
-            }
-        }
-    }
+    // const refreshToken = async () => {
+    //     try {
+    //         const response = await axios.get('http://localhost:5000/token');
+    //         // console.log('hello');
+    //         // console.log(response);
+    //         setToken(response.data.accessToken);
+    //         const decoded = jwt_decode(response.data.accessToken);
+    //         setName(decoded.name);
+    //         setExpire(decoded.exp);
+    //     } catch (error) {
+    //         if (error.response) {
+    //             navigate("/");
+    //         }
+    //     }
+    // }
  
     const axiosJWT = axios.create();
  
@@ -236,13 +236,22 @@ const ECGform = (props) => {
     // }
     //
     class UserDataForm extends Component {
-    constructor() {
+    constructor(props) {
       super();
-  
+      this.accessToken = props.accessToken;
       this.state = {
-        email: "",
-        password: "",
-        name: "",
+        cp: "",
+        trtbps: "",
+        chol: "",
+        fbs: "",
+        slp: "",
+        axiosConfig : {
+          headers: {
+              'Content-Type': 'application/json;charset=UTF-8',
+              "Access-Control-Allow-Origin": "*",
+              "Authorization": `Bearer ${this.accessToken}`,
+          }
+        },
         hasAgreed: false
       };
   
@@ -260,11 +269,24 @@ const ECGform = (props) => {
       });
     }
   
-    handleSubmit(e) {
+    handleSubmit = async(e) => {
       e.preventDefault();
   
       console.log("The form was submitted with the following data:");
       console.log(this.state);
+      try{
+            const response = await axios.post("user_attr", {
+                'cp': this.state.cp,
+                'trtbps': this.state.trtbps,
+                'chol': this.state.chol,
+                'fbs': this.state.fbs,
+                'slp': this.state.slp,
+            }, this.state.axiosConfig)
+            console.log(response);
+            }
+            catch(error){
+                console.log(error);
+            }
     }
   //
   render(){
@@ -302,71 +324,71 @@ const ECGform = (props) => {
 
           <div className="formField">
             <label className="formFieldLabel" htmlFor="name">
-              CP
+              Chest Pain Type
             </label>
             <input
               type="text"
-              id="name"
+              id="cp"
               className="formFieldInput"
               placeholder="Enter chest pain type"
-              name="name"
-              value={this.state.name}
+              name="cp"
+              value={this.state.cp}
               onChange={this.handleChange}
             />
           </div>
           <div className="formField">
             <label className="formFieldLabel" htmlFor="name">
-              TRTBPS
+              Resting Blood Pressure
             </label>
             <input
               type="text"
-              id="name"
+              id="trtbps"
               className="formFieldInput"
-              placeholder="Enter trtbps"
-              name="name"
-              value={this.state.name}
+              placeholder="Enter Resting Blood Pressure"
+              name="trtbps"
+              value={this.state.trtbps}
               onChange={this.handleChange}
             />
           </div>
           <div className="formField">
             <label className="formFieldLabel" htmlFor="name">
-              CHOL
+              Cholestrol
             </label>
             <input
               type="text"
-              id="name"
+              id="chol"
               className="formFieldInput"
               placeholder="Enter cholestrol"
-              name="name"
-              value={this.state.name}
+              name="chol"
+              value={this.state.chol}
               onChange={this.handleChange}
             />
           </div>
           <div className="formField">
             <label className="formFieldLabel" htmlFor="name">
-              FBS
+              Fasting Blood Sugar
             </label>
             <input
               type="text"
-              id="name"
+              id="fbs"
               className="formFieldInput"
               placeholder="Enter fasting blood sugar"
-              name="name"
-              value={this.state.name}
+              name="fbs"
+              value={this.state.fbs}
               onChange={this.handleChange}
             />
           </div>
           <div className="formField">
             <label className="formFieldLabel" htmlFor="name">
-              SLP
+              Slope
             </label>
             <input
               type="text"
-              id="name"
+              id="slp"
               className="formFieldInput"
-              placeholder="Enter SLP"
-              name="name"
-              value={this.state.name}
+              placeholder="Enter Slope"
+              name="slp"
+              value={this.state.slp}
               onChange={this.handleChange}
             />
           </div>
@@ -385,7 +407,19 @@ const ECGform = (props) => {
 
 
 function UserDetails(props){
+
+  
+
+  useEffect(() => {
+   
+    handleUserDetails();
+    
+}, []);
   const [value,setValue] = useState({});
+  
+  
+  const handleUserDetails = async() => {
+
   let accessToken = props.accessToken;
   let axiosConfig = {
     headers: {
@@ -394,9 +428,22 @@ function UserDetails(props){
         "Authorization": `Bearer ${accessToken}`,
     }
   };
+    const response = await axios.get('users_attr',axiosConfig);
+    console.log(response.data[0]);
+    setValue(response.data[0]);
+    
+  }
   const onSubmit = async() => {
     try{
-      const response = await axios.get("users",axiosConfig)
+      let accessToken = props.accessToken;
+      let axiosConfig = {
+        headers: {
+            'Content-Type': 'application/json;charset=UTF-8',
+            "Access-Control-Allow-Origin": "*",
+            "Authorization": `Bearer ${accessToken}`,
+        }
+      };
+      const response = await axios.get("report",axiosConfig)
       console.log(response);
       }
       catch(error){
@@ -416,39 +463,39 @@ function UserDetails(props){
       <table>
         <tr>
           <td>Age</td>
-          <td>21</td>
+          <td>{value.age}</td>
         </tr>
         <tr>
           <td>Sex</td>
-          <td>Male</td>
+          <td>{value.sex}</td>
         </tr>
         <tr>
           <td>Maximum Heart Rate recorded</td>
-          <td>73</td>
+          <td>{value.thalachh}</td>
         </tr>
         <tr>
-          <td>Chets Pain Type</td>
-          <td>Typical Angina</td>
+          <td>Chest Pain Type</td>
+          <td>{value.cp}</td>
         </tr>
         <tr>
           <td>Fasting Blood Sugar</td>
-          <td>90</td>
+          <td>{value.fbs}</td>
         </tr>
         <tr>
           <td>Blood Cholestrol</td>
-          <td>140</td>
+          <td>{value.chol}</td>
         </tr>
         <tr>
           <td>Blood Pressure</td>
-          <td>145</td>
+          <td>{value.trtbps}</td>
         </tr>
         <tr>
           <td>Resting ECG category</td>
-          <td>Normal</td>
+          <td>{value.restecg}</td>
         </tr>
         <tr>
           <td>Slope</td>
-          <td>1</td>
+          <td>{value.slp}</td>
         </tr>
       </table>
       </Box>

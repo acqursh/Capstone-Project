@@ -71,6 +71,7 @@
 // export default Register
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 class SignUpForm extends Component {
   constructor() {
@@ -103,7 +104,21 @@ class SignUpForm extends Component {
 
     console.log("The form was submitted with the following data:");
     console.log(this.state);
-  }
+            try {
+            axios.post('/register', {
+                // first_name: firstname,
+                // last_name: lastname,
+                email_id: this.state.email,
+                password: this.state.password,
+                //confPassword: confPassword
+            });
+        } catch (error) {
+            if (error.response) {
+                console.log(error.response.data.msg);
+            }
+        }
+    }
+  
 
   render() {
     return (
